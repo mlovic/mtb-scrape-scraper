@@ -1,74 +1,7 @@
 require_relative 'spec_helper'
-require_relative '../lib/brand'
-require_relative '../lib/bike'
-require_relative '../lib/model'
 require_relative '../lib/post'
 
 FactoryGirl.define do
-  # TODO awful. fix at some point
-  factory :bike do
-    #brand { Brand.first || association(:brand) }
-      ##association :brand, name: brand_name
-      #brand { build(:brand, name: brand_name) }
-    #else
-      #brand
-    #end
-      #brand { build(:brand, name: brand_name) }
-      #model { build(:model, brand_name: brand.name) }
-      #model { build(:model, name: model_name, brand_name: brand.name) }
-    trait :with_names do
-      transient do
-        model_name nil
-        brand_name nil
-      end
-      brand { build(:brand, name: brand_name) }
-      model { build(:model, name: model_name, brand_name: brand.name) }
-    end
-    frame_only true
-    size 'L'
-    price 1250
-
-    post
-
-    #association :model, name: 'Foxy', brand_name: 'Mondraker'# brand: {Brand.first }
-    #model { build(:model, name: 'Foxy', brand_name: brand.name) } # unless model
-    #brand model.brand
-    # if here to allow skipping this
-    after :build do |bike| 
-      #model = build(:model, name: 'Foxy')
-      #model.brand = bike.brand
-      #model.save
-      #bike.model = model
-    end
-
-    factory :gambler do
-    end
-  end
-
-
-  factory :brand do
-    sequence(:name) { |n| "Brand#{n}" }
-    confirmation_status 1
-  end
-  
-  factory :model do
-    transient do
-      brand_name nil
-    end
-    #transient do
-      #brand_name false
-    #end
-    #brand { Brand.find_or_create_by!(name: brand_name) }
-    sequence(:name) { |n| "Model#{n}" }
-    confirmation_status 1
-    after :build do |model, evaluator|
-      model.brand = Brand.find_by(name: evaluator.brand_name) || 
-                    build(:brand, name: evaluator.brand_name)
-      #model.save!
-    end
-    #association :brand, name: (brand_name if brand_name)
-  end
-
   factory :post do
     title "USADO (REBAJADO)CUADRO MONDRAKER FOXY RR+TALAS 36 RC2"
     uri "http://www.foromtb.com/threads/rebajado-cuadro-mondraker-foxy-rr-talas-36-rc2.1205912/"
