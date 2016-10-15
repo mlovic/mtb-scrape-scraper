@@ -1,19 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'sinatra'
 gem 'activerecord'
-gem 'sinatra-activerecord'
 gem 'chronic'
-gem 'will_paginate'
-gem 'will_paginate-bootstrap'
-gem 'thor'
 gem 'mechanize'
 gem 'sqlite3'
-gem 'concurrent-ruby', require: 'concurrent'
 
 group :production do
   gem 'unicorn'
-  gem 'rufus-scheduler'
   gem 'pg'
 end
 
