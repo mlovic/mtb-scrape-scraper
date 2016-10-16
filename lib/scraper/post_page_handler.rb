@@ -6,9 +6,14 @@ class PostPageHandler
 
   include Logging
 
-  def initialize(queue)
-    @download_queue = queue
+  def initialize(posts, exchange)
+    @posts = posts
+    @exchange = exchange
     @previews = {} # previews_cache?
+  end
+
+  def download_q=(queue)
+    @download_queue = queue
   end
 
   def process_page(page)

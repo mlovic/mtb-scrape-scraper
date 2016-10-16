@@ -6,10 +6,12 @@ class ListPageHandler
 
   include Logging
 
-  def initialize(queue, post_page_handler)
-  
-    @download_queue = queue
+  def initialize(post_page_handler)
     @post_page_handler = post_page_handler
+  end
+
+  def download_q=(queue)
+    @download_queue = queue
   end
 
   def process_page(page)
