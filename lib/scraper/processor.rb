@@ -1,25 +1,36 @@
+require 'logging'
+
 class Processor
-  def initialize(queue, *handlers)
-    @queue    = queue # does nothing with 2nd, alternative impl
+  include Logging
+
+  def initialize(*handlers)
     @handlers = handlers
   end
 
-  def match_handler(handler)
-    @handlers.find { |h| h.class == handler }
-  end
-
-  def dispatch(page, handler)
-    target = match_handler(handler) or raise "Unknown handler! #{handler}"
-    target.process_page(page)
-  end
-
-  def start
-    until @queue.empty?
-      #if page_and_handler = @queue.pop
-        #page, handler = page_and_handler
-      page, handler = @queue.pop
-      target = match_handler(handler) or raise "Unknown handler! #{handler}"
-      target.process_page(page)
+  def process_async(pages_q, url_q)
+    @handlers.each { |h| h.download_q = url_q }
+    @thread = Thread.new do
+      until pages_q.closed?
+        (page, handler = pages_q.pop) or Thread.exit
+        dispatch(page, handler)
+      end
     end
   end
+
+  def running?
+    @thread&.alive?
+  end
+
+  private
+    def dispatch(page, handler)
+      target = match_handler(handler) or raise "Unknown handler! #{handler}"
+      target.process_page(page)
+    rescue StandardError => e
+      logger.error "Error processing page from #{page.respond_to?(:uri) ? page.uri : '[Unknown URL]'}"
+      logger.error e.message
+    end
+
+    def match_handler(handler)
+      @handlers.find { |h| h.class == handler }
+    end
 end

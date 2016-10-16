@@ -1,19 +1,13 @@
 require 'thread'
-require 'timeout'
 require 'scraper/spider'
+require_relative '../helpers'
 
 Thread.abort_on_exception = true
 
 # move to Helpers?
-def wait_until(timeout = 5, sleep_time = 0.01)
-  Timeout::timeout(timeout) do # raises exception if timeout
-    while !yield
-      sleep sleep_time
-    end
-  end
-end
 
 RSpec.describe Spider do
+  include Helpers
   # TODO Are threads being killed when Spider goes out of scope?
   let(:spider) { Spider.new(agent, time_between_requests: 0) }
   let(:in_q)  { Queue.new }

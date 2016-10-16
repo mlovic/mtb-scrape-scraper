@@ -1,4 +1,6 @@
+require 'timeout'
 require 'yaml'
+
 module Helpers
 
   def write_fixture(name, str)
@@ -18,6 +20,14 @@ module Helpers
       YAML::load(f)
     else
       f
+    end
+  end
+
+  def wait_until(timeout = 1, sleep_time = 0.01)
+    Timeout::timeout(timeout) do # raises exception if timeout
+      while !yield
+        sleep sleep_time
+      end
     end
   end
 
