@@ -12,7 +12,8 @@ RSpec.describe ListPageHandler, loads_DB: true do
 
   let(:download_queue) { Array.new } # impl uses Queue. Double must impl <</push.
   let(:pp_handler) { double("pp_handler", add_post_preview: nil) }
-  let(:lp_handler) { ListPageHandler.new(download_queue, pp_handler)  }
+  let(:lp_handler) { ListPageHandler.new(pp_handler)  }
+  before { lp_handler.download_q = download_queue }
 
   describe '#eval_post' do
     let(:preview) do
