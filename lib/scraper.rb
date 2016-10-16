@@ -20,20 +20,22 @@ class Scraper
     return false if started?
     @spider = Spider.new(Mechanize.new) # get rid of hardcoded limit
     @spider.crawl_async(url_q, pages_q) # Async. Starts thread and returns immediately.
+    @processor.process_async(pages_q, url_q)
     # TODO handle potential deadlock error. Sleep and retry?
-    @processor_thread = Thread.new do
-      processor.dispatch(*pages_q.pop) until url_q.empty? && 
-                                             !@spider.waiting_for_response? 
-    end
-
-    logger.debug "Done. Closing queues..."
+      #url_q.empty? && 
+        #!@spider.waiting_for_response? 
     return true
-    #url_q.close # Triggers Spider thread to exit
-    #pages_q.close 
   end
 
   def enq(url, handler)
     url_q << [url, handler]
+  end
+  
+  def done?
+    url_q.empty? && 
+    pages_q.empty? &&
+    !@spider.waiting_for_response? &&
+    @processor.sleeping?
   end
 
   def stop

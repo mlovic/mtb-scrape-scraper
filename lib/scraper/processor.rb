@@ -21,6 +21,10 @@ class Processor
     @thread&.alive?
   end
 
+  def sleeping?
+    @thread&.status == 'sleep'
+  end
+
   private
     def dispatch(page, handler)
       target = match_handler(handler) or raise "Unknown handler! #{handler}"
