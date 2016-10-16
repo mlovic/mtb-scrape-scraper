@@ -34,8 +34,8 @@ class Scraper
   def done?
     url_q.empty? && 
     pages_q.empty? &&
-    !@spider.waiting_for_response? &&
-    @processor.sleeping?
+    @processor.waiting? &&
+    @spider.waiting?
   end
 
   def stop

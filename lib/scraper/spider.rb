@@ -14,12 +14,18 @@ class Spider
     @thread&.kill
   end
 
+  def waiting?
+    @waiting
+  end
+
   # TODO why mechanize? Switch to Net::HTTP + Nokogiri?
   # TODO no reason for spider to know about handler
   def crawl_async(in_queue, out_queue)
     @thread = Thread.new do
                 until in_queue.closed?
+                  @waiting = true
                   (url, handler = in_queue.pop) or Thread.exit
+                  @waiting = false
                   @waiting_for_response = true
                   logger.debug "Fetching #{url}..."
                   begin

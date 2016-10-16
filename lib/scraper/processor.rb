@@ -11,10 +11,16 @@ class Processor
     @handlers.each { |h| h.download_q = url_q }
     @thread = Thread.new do
       until pages_q.closed?
+        @waiting = true
         (page, handler = pages_q.pop) or Thread.exit
+        @waiting = false
         dispatch(page, handler)
       end
     end
+  end
+
+  def waiting?
+    @waiting
   end
 
   def running?
