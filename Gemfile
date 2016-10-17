@@ -4,6 +4,8 @@ gem 'activerecord'
 gem 'chronic'
 gem 'mechanize'
 gem 'sqlite3'
+gem 'bunny'
+gem 'mongo'
 
 group :production do
   gem 'unicorn'
@@ -11,6 +13,7 @@ group :production do
 end
 
 group :test, :development do
+  gem 'rack'
   gem 'thin'
   gem 'rspec'
 
