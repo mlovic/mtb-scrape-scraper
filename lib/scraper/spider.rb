@@ -4,7 +4,7 @@ class Spider
 
   include Logging
 
-  def initialize(agent, time_between_requests: 2)
+  def initialize(agent, time_between_requests: (ENV['SPIDER_DELAY'].to_f || 2))
     @agent = agent
     @waiting_for_response = false
     @wait_time = time_between_requests
