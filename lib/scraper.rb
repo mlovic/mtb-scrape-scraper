@@ -19,7 +19,9 @@ class Scraper
     # TODO handle errors in spider thread
     return false if started?
     @spider = Spider.new(Mechanize.new) # get rid of hardcoded limit
+    logger.info "Starting spider..."
     @spider.crawl_async(url_q, pages_q) # Async. Starts thread and returns immediately.
+    logger.info "Starting processor..."
     @processor.process_async(pages_q, url_q)
     # TODO handle potential deadlock error. Sleep and retry?
       #url_q.empty? && 

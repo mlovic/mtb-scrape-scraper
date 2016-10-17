@@ -15,6 +15,7 @@ class ListPageHandler
   end
 
   def process_page(page)
+    #logger.debug "LPHandler processing page #{page.uri}"
     page.extend ListPage
     page.posts.each { |post| eval_post(post) }
   end
@@ -36,6 +37,7 @@ class ListPageHandler
   end
 
   def download(post)
+    logger.debug "Queueing new url #{post.url}"
     @download_queue << [post.url, @post_page_handler.class] # tuple?
     # TODO distinguish between post and ppreview
     @post_page_handler.add_post_preview(post.url, post)

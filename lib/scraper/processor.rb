@@ -10,9 +10,11 @@ class Processor
   def process_async(pages_q, url_q)
     @handlers.each { |h| h.download_q = url_q }
     @thread = Thread.new do
+      logger.debug "Processor listening..."
       until pages_q.closed?
         @waiting = true
         (page, handler = pages_q.pop) or Thread.exit
+        logger.debug "Processor received page for #{handler.to_s}"
         @waiting = false
         dispatch(page, handler)
       end
