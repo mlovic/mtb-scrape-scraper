@@ -6,6 +6,8 @@ gem 'mechanize'
 gem 'sqlite3'
 gem 'bunny'
 gem 'mongo'
+gem 'sinatra'
+gem 'rack', '~> 1.5'
 
 group :production do
   gem 'unicorn'
@@ -13,7 +15,7 @@ group :production do
 end
 
 group :test, :development do
-  gem 'rack'
+  gem 'rack-test' 
   gem 'thin'
   gem 'rspec'
 
