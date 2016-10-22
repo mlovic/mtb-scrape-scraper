@@ -11,7 +11,7 @@ Thread.abort_on_exception = true
 RSpec.describe 'Scraper integration test' do
   include Helpers
   let(:exchange) { double("Rabbitmqexchange", publish: nil) }
-  let(:posts) { double("Mongo-posts-collection", {insert_one: nil, update_one: nil}) }
+  let(:posts) { double("posts-repo", {create: nil, update: nil}) }
 
   it 'example 1' do
     allow(Spider).to receive(:new).and_return(Spider.new(Mechanize.new, time_between_requests: 0))

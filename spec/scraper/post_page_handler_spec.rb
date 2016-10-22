@@ -6,8 +6,8 @@ require 'scraper/post_preview'
 require 'uri'
 
 RSpec.describe PostPageHandler, loads_DB: true do
-  let(:posts)      { double("posts collection") }
-  let(:exchange)   { double("posts exchange") }
+  let(:posts)      { double("posts collection", {create: nil, update: nil}) }
+  let(:exchange)   { double("posts exchange", publish: nil) }
   let(:pp_handler) { PostPageHandler.new(posts, exchange) }
   let(:page)       { double("page", uri: URI.parse('/uri/path')) }
   let(:preview)    { double("preview") }
@@ -32,8 +32,8 @@ RSpec.describe PostPageHandler, loads_DB: true do
         allow(post).to receive(:update)
       end
       it 'updates post in database' do
-        pending
-        expect(posts).to receive(:update_one).with preview_attr: 1,
+        #pending
+        expect(posts).to receive(:update).with preview_attr: 1,
                                                    page_attr: 2
         pp_handler.process_page(page)
       end
@@ -47,10 +47,12 @@ RSpec.describe PostPageHandler, loads_DB: true do
 
     context 'when post not already in database' do
       it 'creates post in database' do
-        pending
-        expect(posts).to receive(:insert_one).with preview_attr: 1,
+        #pending
+        expect(posts).to receive(:create).with preview_attr: 1,
                                                    page_attr: 2
+        pp_handler.process_page(page)
       end
+
       it 'publishes create to exchange' do
         payload = JSON.generate({page_attr: 2, preview_attr: 1})
         expect(exchange).to receive(:publish).with(payload, type: 'create')

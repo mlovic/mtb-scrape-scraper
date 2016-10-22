@@ -51,11 +51,13 @@ class PostPageHandler
     db_post.update(attrs)
     logger.info "Post #{db_post.id} updated - #{attrs[:title]}"
     @exchange.publish(JSON.generate(attrs), type: 'update')
+    @posts.update attrs
   end
 
   def create_post(attrs)
     new_post = Post.create!(attrs)
     logger.info "Post #{new_post.id} created - #{attrs[:title]}"
     @exchange.publish(JSON.generate(attrs), type: 'create')
+    @posts.create attrs
   end
 end

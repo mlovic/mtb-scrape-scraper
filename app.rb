@@ -7,6 +7,7 @@ require 'sinatra'
 require 'thin'
 
 require 'scraper'
+require 'post_repo'
 require 'scraper/processor'
 require 'scraper/list_page_handler'
 require 'scraper/post_page_handler'
@@ -50,7 +51,7 @@ require 'logging'
     puts "Going to connect to Mongo"
     client = Mongo::Client.new([ENV['MONGO_ADDRESS']], database: 'scraper',
                                                        connect_timeout: 5)
-    posts = client[:posts]
+    posts = PostRepo.new(client)
 
     pphandler = PostPageHandler.new(posts, exchange)
     lphandler = ListPageHandler.new(pphandler)
