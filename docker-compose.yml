@@ -1,0 +1,50 @@
+version: '2'
+services:
+  db: 
+    image: postgres
+    environment:
+      POSTGRES_USER: mtb-scrape
+      POSTGRES_PASSWORD: mtb-scrape
+    ports:
+      #- '5432:5432'
+      - '5432'
+    #volumes
+  poststore:
+    image: mongo
+    ports:
+      #- '27017:27017'
+      - '27017'
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq
+    ports:
+      #- '5672:5672'
+      #- '15672:15672'
+      - '5672'
+      - '15672'
+  web:
+    build: .
+    links:
+      - db
+      - rabbitmq
+      - poststore
+    depends_on:
+      - db
+      - rabbitmq
+      - poststore
+    environment:
+      #MONGO_ADDRESS: 'mongodb://poststore:27017'
+      MONGO_ADDRESS: 'poststore:27017'
+      RACK_ENV: production
+      DB_PASSWORD: mtb-scrape
+      RMQ: amqp://guest:guest@rabbitmq:5672
+    volumes:
+      - .:/mtb-scrape-scraper
+    command: rackup -p 4567 #bundle exec rails s -p 3000 -b '0.0.0.0'
+    #command: bundle exec ruby test.rb #bundle exec rails s -p 3000 -b '0.0.0.0'
+    #command: rspec /mtb-scrape-scraper/spec/integration_spec.rb #bundle exec rails s -p 3000 -b '0.0.0.0'
+    #command: ruby test.rb #bundle exec rails s -p 3000 -b '0.0.0.0'
+    #volumes:
+      #- .:/myapp
+    ports:
+      - "4567:4567"
